@@ -10,6 +10,44 @@ namespace TopGamers_v01
     {
         static void Main(string[] args)
         {
+            int playersQuantity = 20;
+            Creator creator = new Creator();
+            List<Player> players = new List<Player>();
+            List<Player> filtered = new List<Player>();
+            Filter filter = new Filter();
+
+            for (int i = 0; i < playersQuantity; i++)
+            {
+                players.Add(creator.CreateNewPlayer());
+            }
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                Console.Write($"{i + 1:d2}. ");
+                players[i].ShowInfo();
+            }
+
+            Console.WriteLine($"--------------------------------");
+
+            filtered = filter.TopLevel(players, 3);
+
+            for (int i = 0; i < filtered.Count; i++)
+            {
+                Console.Write($"{i + 1}. ");
+                filtered[i].ShowInfo();
+            }
+        }
+    }
+
+    class Filter
+    {
+        public List<Player> TopLevel(List<Player> players, int depth)
+        {
+            //List<Player> topLevel = new List<Player>();
+
+            var topLevel = players.Where(player => player.Level <= 10 && player.Level >= 6).OrderByDescending(player => player.Level).ToList();
+
+            return topLevel;
         }
     }
 
@@ -31,9 +69,9 @@ namespace TopGamers_v01
 
         private string CreateNewName()
         {
-            string name = "";
-            string[] names = new string[] 
-            {"Альв", "Арнульв", "Атли", "Бёдмод", "Бернард", "Берси", "Бо", 
+            string name;// = "";
+            string[] names = new string[]
+            {"Альв", "Арнульв", "Атли", "Бёдмод", "Бернард", "Берси", "Бо",
                 "Вальгард", "Вегейр", "Винсент", "Гарольд", "Гуннар", "Зигрид",
                 "Кнуд", "Колль", "Магни", "Моди", "Олав", "Рауд", "Регин",
                 "Сван", "Снор", "Стейн", "Томас", "Тород", "Ульв", "Финр"
@@ -79,3 +117,4 @@ namespace TopGamers_v01
         }
     }
 }
+
