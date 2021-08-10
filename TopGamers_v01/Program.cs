@@ -10,11 +10,11 @@ namespace TopGamers_v01
     {
         static void Main(string[] args)
         {
-            int playersQuantity = 20;
             Creator creator = new Creator();
             List<Player> players = new List<Player>();
             List<Player> filtered = new List<Player>();
             Filter filter = new Filter();
+            int playersQuantity = 20;
 
             for (int i = 0; i < playersQuantity; i++)
             {
@@ -41,13 +41,47 @@ namespace TopGamers_v01
 
     class Filter
     {
+        private List<int> _numbers;
+
+        public Filter()
+        {
+            _numbers = new List<int>();
+        }
+
         public List<Player> TopLevel(List<Player> players, int depth)
         {
-            //List<Player> topLevel = new List<Player>();
+            _numbers.Clear();
 
-            var topLevel = players.Where(player => player.Level <= 10 && player.Level >= 6).OrderByDescending(player => player.Level).ToList();
+            for (int i = 0; i < players.Count; i++)
+            {
+                _numbers.Add(players[i].Level);
+            }
+
+            CalculateUpperLimits(players, 3, out int topUpperLimit, out int topLowerLimit);
+
+            var topLevel = players.Where(player => player.Level <= topUpperLimit && player.Level >= topLowerLimit).OrderByDescending(player => player.Level).ToList();
 
             return topLevel;
+        }
+
+        private void CalculateUpperLimits(List<Player> players, int depth, out int topUpperLimit, out int topLowerLimit)
+        {
+            
+            
+            var cutLevels = _numbers.Distinct().ToList();
+
+            topUpperLimit = cutLevels.Max();
+            int lowerLimit = topUpperLimit;
+
+            for (int i = 0; i < depth; i++)
+            {
+                var temporaryCutLevels = cutLevels.Where(number => number != lowerLimit);
+                lowerLimit = temporaryCutLevels.Max();
+                cutLevels = temporaryCutLevels.ToList();
+            }
+            topLowerLimit = lowerLimit;
+
+            Console.WriteLine($"диапазон TOP уровней {topUpperLimit}-{topLowerLimit}");
         }
     }
 
