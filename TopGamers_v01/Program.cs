@@ -12,7 +12,7 @@ namespace TopGamers_v01
         {
             List<Player> players = new List<Player>();
             Creator creator = new Creator();
-            bool isFiltrate = true;
+            bool isWork = true;
             int number = 3;
             
 
@@ -21,9 +21,9 @@ namespace TopGamers_v01
             {
                 players.Add(creator.CreateNewPlayer());
             }
-            IEnumerable<Player> filtered = players;
+            IEnumerable<Player> playerFilter = players;
 
-            while (isFiltrate)
+            while (isWork)
             {  
                 Console.WriteLine($"Рейтинг игроков");
                 Console.WriteLine($"---------------");
@@ -33,23 +33,23 @@ namespace TopGamers_v01
                 {
                     case "1":
                         Console.WriteLine($"Список игроков");
-                        filtered = players;
+                        playerFilter = players;
                         break;
                     case "2":
-                        filtered = players.OrderByDescending(player => player.Level).Take(number);
+                        playerFilter = players.OrderByDescending(player => player.Level).Take(number);
                         break;
                     case "3":
-                        filtered = players.OrderByDescending(player => player.Strength).Take(number);
+                        playerFilter = players.OrderByDescending(player => player.Strength).Take(number);
                         break;
                     case "exit":
-                        isFiltrate = false;
+                        isWork = false;
                         break;
                     default:
                         Console.WriteLine($"ошибка ввода команды");
                         break;
                 }
 
-                foreach (var player in filtered)
+                foreach (var player in playerFilter)
                 {
                     player.ShowInfo();
                 }
@@ -59,13 +59,6 @@ namespace TopGamers_v01
                 Console.Clear();
             }
         }
-    }
-
-
-
-    class Filter
-    {
-
     }
 
     class Creator
@@ -86,7 +79,7 @@ namespace TopGamers_v01
 
         private string CreateNewName()
         {
-            string name;// = "";
+            string name;
             string[] names = new string[]
             {"Альв", "Арнульв", "Атли", "Бёдмод", "Бернард", "Берси", "Бо",
                 "Вальгард", "Вегейр", "Винсент", "Гарольд", "Гуннар", "Зигрид",
@@ -134,5 +127,3 @@ namespace TopGamers_v01
         }
     }
 }
-
-
