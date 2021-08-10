@@ -10,79 +10,62 @@ namespace TopGamers_v01
     {
         static void Main(string[] args)
         {
-            Creator creator = new Creator();
             List<Player> players = new List<Player>();
-            List<Player> filtered = new List<Player>();
-            Filter filter = new Filter();
-            int playersQuantity = 20;
+            Creator creator = new Creator();
+            bool isFiltrate = true;
+            int number = 3;
+            
 
-            for (int i = 0; i < playersQuantity; i++)
+            int quantity = 15;
+            for (int i = 0; i < quantity; i++)
             {
                 players.Add(creator.CreateNewPlayer());
             }
+            IEnumerable<Player> filtered = players;
 
-            for (int i = 0; i < players.Count; i++)
-            {
-                Console.Write($"{i + 1:d2}. ");
-                players[i].ShowInfo();
-            }
+            while (isFiltrate)
+            {  
+                Console.WriteLine($"Рейтинг игроков");
+                Console.WriteLine($"---------------");
+                Console.WriteLine($"\n1 - Весь список\n2 - Топ 3 по уровню\n3 - Топ 3 по силе\nexit - Выход");
 
-            Console.WriteLine($"--------------------------------");
+                switch (Console.ReadLine().ToLower())
+                {
+                    case "1":
+                        Console.WriteLine($"Список игроков");
+                        filtered = players;
+                        break;
+                    case "2":
+                        filtered = players.OrderByDescending(player => player.Level).Take(number);
+                        break;
+                    case "3":
+                        filtered = players.OrderByDescending(player => player.Strength).Take(number);
+                        break;
+                    case "exit":
+                        isFiltrate = false;
+                        break;
+                    default:
+                        Console.WriteLine($"ошибка ввода команды");
+                        break;
+                }
 
-            filtered = filter.TopLevel(players, 3);
+                foreach (var player in filtered)
+                {
+                    player.ShowInfo();
+                }
 
-            for (int i = 0; i < filtered.Count; i++)
-            {
-                Console.Write($"{i + 1}. ");
-                filtered[i].ShowInfo();
+                Console.WriteLine($"\nлюбую для продолжения");
+                Console.ReadKey();
+                Console.Clear();
             }
         }
     }
 
+
+
     class Filter
     {
-        private List<int> _numbers;
 
-        public Filter()
-        {
-            _numbers = new List<int>();
-        }
-
-        public List<Player> TopLevel(List<Player> players, int depth)
-        {
-            _numbers.Clear();
-
-            for (int i = 0; i < players.Count; i++)
-            {
-                _numbers.Add(players[i].Level);
-            }
-
-            CalculateUpperLimits(players, 3, out int topUpperLimit, out int topLowerLimit);
-
-            var topLevel = players.Where(player => player.Level <= topUpperLimit && player.Level >= topLowerLimit).OrderByDescending(player => player.Level).ToList();
-
-            return topLevel;
-        }
-
-        private void CalculateUpperLimits(List<Player> players, int depth, out int topUpperLimit, out int topLowerLimit)
-        {
-            
-            
-            var cutLevels = _numbers.Distinct().ToList();
-
-            topUpperLimit = cutLevels.Max();
-            int lowerLimit = topUpperLimit;
-
-            for (int i = 0; i < depth; i++)
-            {
-                var temporaryCutLevels = cutLevels.Where(number => number != lowerLimit);
-                lowerLimit = temporaryCutLevels.Max();
-                cutLevels = temporaryCutLevels.ToList();
-            }
-            topLowerLimit = lowerLimit;
-
-            Console.WriteLine($"диапазон TOP уровней {topUpperLimit}-{topLowerLimit}");
-        }
     }
 
     class Creator
@@ -119,7 +102,7 @@ namespace TopGamers_v01
         private int CreateNewLevel()
         {
             int minlevel = 1;
-            int maxLevel = 10;
+            int maxLevel = 50;
 
             return _random.Next(minlevel, maxLevel);
         }
@@ -151,4 +134,5 @@ namespace TopGamers_v01
         }
     }
 }
+
 
